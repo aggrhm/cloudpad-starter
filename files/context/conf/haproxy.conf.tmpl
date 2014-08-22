@@ -1,0 +1,28 @@
+global
+	maxconn 100000
+
+defaults
+	mode http
+	timeout connect 5000ms
+	timeout client 50000ms
+	timeout server 50000ms
+
+frontend http-in
+	bind *:80
+	acl host_api hdr_beg(host) -i api.
+	use_backend api-cluster if host_api
+	default_backend site-cluster
+
+backend api-cluster
+${for name, ctnr in containers.items():}$
+	${if ctnr['type'] == 'api':}$
+	server ${name}$ ${ctnr['host_ip']}$:${ctnr['port_app_h']}$
+	${:end}$
+${:end}$
+
+backend site-cluster
+${for name, ctnr in containers.items():}$
+	${if ctnr['type'] == 'site':}$
+	server ${name}$ ${ctnr['host_ip']}$:${ctnr['port_app_h']}$
+	${:end}$
+${:end}$
