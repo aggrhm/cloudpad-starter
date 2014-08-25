@@ -1,6 +1,7 @@
 #!/usr/bin/python3
 
 import argparse, urllib.request, json, os.path, sys, re, time, subprocess, logging
+from collections import OrderedDict
 
 opts = {}
 
@@ -52,7 +53,8 @@ def update_files():
 	if cinfo == None:
 		info("Could not access container information.\n")
 		return
-	ns = {'containers': cinfo}
+	cinfo_srt = OrderedDict(sorted(cinfo.items(), key=lambda t: t[0]))
+	ns = {'containers': cinfo_srt}
 
 	# build file and compare it to existing one
 	try:
@@ -65,6 +67,7 @@ def update_files():
 	of_str = read_file(opts['output_file'])
 	if tpl_str != of_str:
 		info("Container information changed. Updating {}.\n".format(opts['output_file']))
+		info(cinfo_srt)
 		# replace file
 		write_file(opts['output_file'], tpl_str)
 		# restart service

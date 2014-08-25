@@ -3,14 +3,29 @@ require 'fileutils'
 namespace :starter do
 
   task :load do
-    fetch(:dockerfile_helpers).merge!({
+    set(:dockerfile_helpers, {
       install_ruby_200: lambda {
         dfi :run, 'installers/install_ruby.sh', 'http://cache.ruby-lang.org/pub/ruby/2.0/ruby-2.0.0-p481.tar.gz'
       },
       install_haproxy_153: lambda {
         dfi :run, 'installers/install_haproxy.sh', 'http://www.haproxy.org/download/1.5/src/haproxy-1.5.3.tar.gz'
       }
-    })
+    }.merge(fetch(:dockerfile_helpers)))
+
+    set(:services, {
+      haproxy: "haproxy -f /root/conf/haproxy.conf",
+
+      haproxy_config_updater: "/root/bin/pyconfd -t /root/conf/haproxy.conf.tmpl -s haproxy -k USR1 -a $APP_KEY",
+
+      heartbeat: "/root/bin/heartbeat -a $APP_KEY",
+
+      mongodb: "/usr/bin/mongod --bind_ip 0.0.0.0 --logpath /var/log/mongodb.log",
+
+      nginx: "nginx",
+
+      unicorn: "cd /app && bundle exec unicorn -c /root/conf/unicorn.rb"
+
+    }.merge(fetch(:services)))
   end
 
 

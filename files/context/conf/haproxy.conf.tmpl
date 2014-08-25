@@ -1,9 +1,11 @@
 global
-	maxconn 100000
+	maxconn 2048
 
 defaults
 	mode http
-	timeout connect 5000ms
+	option forwardfor
+	retries 3
+	timeout connect 10000ms
 	timeout client 50000ms
 	timeout server 50000ms
 
