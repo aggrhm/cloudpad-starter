@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 
-import subprocess, os, shutil
+import subprocess, os, shutil, sys
 
 home_path = "/root/services"
 services = os.environ.get('CNTR_SERVICES')
@@ -12,7 +12,7 @@ else:
 	svs = services.split(',')
 
 if not os.path.isdir(home_path):
-	exit()
+	sys.exit()
 
 for fp in os.listdir(home_path):
 	sn = os.path.splitext(fp)[0]

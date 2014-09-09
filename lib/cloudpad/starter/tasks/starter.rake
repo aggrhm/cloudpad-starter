@@ -23,7 +23,9 @@ namespace :starter do
 
       nginx: "nginx",
 
-      unicorn: "cd /app && bundle exec unicorn -c /root/conf/unicorn.rb"
+      unicorn: "cd /app && bundle exec unicorn -c /root/conf/unicorn.rb",
+
+      pyrep: "/root/bin/pyrep -t #{fetch(:boxchief_app_token)}"
 
     }.merge(fetch(:services)))
   end
