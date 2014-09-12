@@ -65,10 +65,6 @@ namespace :starter do
       files_path = Cloudpad::Starter.files_path
       sh "cp -auv #{files_path}/context/keys #{root_path}/context"
     end
-    task :services do
-      files_path = Cloudpad::Starter.files_path
-      sh "cp -auv #{files_path}/context/services #{root_path}/context"
-    end
 
   end
 
