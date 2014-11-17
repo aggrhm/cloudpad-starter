@@ -13,7 +13,7 @@ RUN apt-get update -q
 
 RUN apt-get install -qy git-core
 
-<%= dfi :run, 'bin/setup_box.py', '--core' %>
+<%= dfi :configure_basic_container %>
 
 ### APP STUFF
 
@@ -27,7 +27,7 @@ ADD conf/haproxy.conf.tmpl /root/conf/haproxy.conf.tmpl
 
 ADD bin /root/bin
 
-RUN echo "<%= container_public_key %>" >> /root/.ssh/authorized_keys
+<%= dfi :install_container_key %>
 
 EXPOSE 80
 

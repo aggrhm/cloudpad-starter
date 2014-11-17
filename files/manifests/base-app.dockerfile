@@ -15,7 +15,7 @@ RUN apt-get install -qy git-core imagemagick libmagickcore-dev libmagickwand-dev
 
 <%= dfi :install_image_gemfiles %>
 
-<%= dfi :run, 'bin/setup_box.py', '--core' %>
+<%= dfi :configure_basic_container %>
 
 
 ### APP STUFF
@@ -33,6 +33,6 @@ ADD conf/nginx.conf /etc/nginx/nginx.conf
 ### CONTAINER STUFF
 ADD bin /root/bin
 ADD bin/install_services /etc/my_init.d/install_services
-RUN echo "<%= container_public_key %>" >> /root/.ssh/authorized_keys
+<%= dfi :install_container_key %>
 CMD ["/sbin/my_init"]
 <%= dfi :install_image_services %>

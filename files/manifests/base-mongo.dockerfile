@@ -11,11 +11,13 @@ RUN echo 'deb http://downloads-distro.mongodb.org/repo/ubuntu-upstart dist 10gen
 
 RUN apt-get update -q && apt-get install -qy mongodb-org=2.6.1 mongodb-org-server=2.6.1 mongodb-org-shell=2.6.1 mongodb-org-mongos=2.6.1 mongodb-org-tools=2.6.1
 
+<%= dfi :configure_basic_container %>
+
 ### CONTAINER STUFF
 
 ADD bin /root/bin
 
-RUN echo "<%= container_public_key %>" >> /root/.ssh/authorized_keys
+<%= dfi :install_container_key %>
 
 EXPOSE 27017
 
