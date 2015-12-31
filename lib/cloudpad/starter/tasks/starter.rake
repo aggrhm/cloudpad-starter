@@ -41,9 +41,9 @@ namespace :starter do
     set(:services, {
       haproxy: "haproxy -f /root/conf/haproxy.conf",
 
-      haproxy_config_updater: "/root/bin/pyconfd -t /root/conf/haproxy.conf.tmpl -s haproxy -k USR1 -a $APP_KEY",
+      haproxy_config_updater: "/root/bin/pyconfd -t /root/conf/haproxy.conf.tmpl -s haproxy -k USR1 -a $APP_KEY -e #{fetch(:etcd_client_url)}",
 
-      heartbeat: "/root/bin/heartbeat -a $APP_KEY",
+      heartbeat: "/root/bin/heartbeat -a $APP_KEY -e #{fetch(:etcd_client_url)}",
 
       mongodb: "/usr/bin/mongod --bind_ip 0.0.0.0 --logpath /var/log/mongodb.log",
 
