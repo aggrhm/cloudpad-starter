@@ -11,7 +11,7 @@ def start():
 	parser = argparse.ArgumentParser()
 	parser.add_argument("-a", "--app", help="Application key")
 	parser.add_argument("-i", "--interval", help="Update interval", default=30)
-        parser.add_argument("-e", "--etcd_addr", help="Etcd ip:port", default="http://172.17.0.1:2379")
+	parser.add_argument("-e", "--etcd_addr", help="Etcd ip:port", default="http://172.17.0.1:2379")
 	parser.add_argument("-v", "--verbose", help="Verbose", action="store_true", default=False)
 	parser.add_argument("-l", "--log", help="Log path", default="/var/log/heartbeat.log")
 	parser.add_argument("-t", "--ttl", help="Time to live", default=40)
