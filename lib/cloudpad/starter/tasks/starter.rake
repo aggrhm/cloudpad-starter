@@ -23,18 +23,6 @@ namespace :starter do
       },
       install_haproxy_153: lambda {
         dfi :install_haproxy, 'http://www.haproxy.org/download/1.5/src/haproxy-1.5.3.tar.gz'
-      },
-      set_timezone_etc: lambda {
-        str = ""
-        str << "RUN echo \"Etc/UTC\" > /etc/timezone\n"
-        str << "RUN dpkg-reconfigure -f noninteractive tzdata\n"
-      },
-      disable_ssh_host_check: lambda {
-        str = "RUN echo \"Host *\\n\\tStrictHostKeyChecking no\\n\" >> /root/.ssh/config\n"
-      },
-      configure_basic_container: lambda {
-        str = dfi(:set_timezone_etc)
-        str << dfi(:disable_ssh_host_check)
       }
     }.merge(fetch(:dockerfile_helpers)))
 
@@ -42,8 +30,6 @@ namespace :starter do
       haproxy: "haproxy -f /root/conf/haproxy.conf",
 
       haproxy_config_updater: "/root/bin/pyconfd -t /root/conf/haproxy.conf.tmpl -s haproxy -k USR1 -a $APP_KEY -e #{fetch(:etcd_client_url)}",
-
-      heartbeat: "/root/bin/heartbeat -a $APP_KEY -e #{fetch(:etcd_client_url)}",
 
       mongodb: "/usr/bin/mongod --bind_ip 0.0.0.0 --logpath /var/log/mongodb.log",
 
@@ -54,38 +40,16 @@ namespace :starter do
       pyrep: "/root/bin/pyrep -t #{fetch(:boxchief_app_token)}"
 
     }.merge(fetch(:services)))
+
+    fetch(:context_extensions)[:starter] = {path: Cloudpad::Starter.gem_context_path}
   end
 
 
   namespace :install do
-    desc "Install files to project"
-    task :all do
-
-      files_path = Cloudpad::Starter.files_path
-      puts "Installing starter files from #{files_path}.".yellow
-      # TODO: get list of all files in dir and copy if changed
-      sh "cp -auv #{files_path}/* #{root_path}"
-    end
 
     task :manifests do
       files_path = Cloudpad::Starter.files_path
-      sh "cp -auv #{files_path}/manifests #{root_path}"
-    end
-    task :context do
-      files_path = Cloudpad::Starter.files_path
-      sh "cp -auv #{files_path}/context #{root_path}"
-    end
-    task :bin do
-      files_path = Cloudpad::Starter.files_path
-      sh "cp -auv #{files_path}/context/bin #{root_path}/context"
-    end
-    task :conf do
-      files_path = Cloudpad::Starter.files_path
-      sh "cp -auv #{files_path}/context/conf #{root_path}/context"
-    end
-    task :keys do
-      files_path = Cloudpad::Starter.files_path
-      sh "cp -auv #{files_path}/context/keys #{root_path}/context"
+      sh "cp -auv #{gem_manifests_path} #{root_path}"
     end
 
   end
