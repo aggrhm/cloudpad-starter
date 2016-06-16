@@ -56,4 +56,4 @@ namespace :starter do
 
 end
 
-after 'docker:load', 'starter:load'
+after 'cloudpad:load', 'starter:load'
