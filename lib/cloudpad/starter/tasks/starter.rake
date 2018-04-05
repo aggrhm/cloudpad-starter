@@ -6,6 +6,7 @@ namespace :starter do
     set(:dockerfile_helpers, {
       install_ruby: lambda {|tar|
         str = ""
+        str << "RUN apt-get update -q\n"
         str << "RUN apt-get install -qy gawk build-essential libreadline6-dev libssl-dev libyaml-dev libsqlite3-dev sqlite3 autoconf libgdbm-dev libncurses5-dev automake bison libffi-dev libxslt-dev libxml2-dev\n"
         str << "RUN curl -L #{tar} | tar -zxf - -C /tmp/\n"
         str << "RUN cd /tmp/ruby-* && ./configure && make && make install && cd && rm -rf /tmp/ruby-* && gem install bundler\n"
